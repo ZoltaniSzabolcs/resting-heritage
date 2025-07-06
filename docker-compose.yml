@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+    rh-app:
+        build:
+            context: .
+        ports:
+            - 9000:9000
+        volumes:
+            -
+            - .:/var/www/html
+        depends_on:
+            - rh-db
+    rh-db:
+        image: pgrouting/pgrouting
+        restart: always
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_USER: ${DB_USERNAME}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_DATABASE}
+    rh-pgadmin:
+        image: dpage/pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: ${PGA_EMAIL}
+            PGADMIN_DEFAULT_PASSWORD: ${PGA_PASSWORD}
+
+volumes:
+    rhdata:
