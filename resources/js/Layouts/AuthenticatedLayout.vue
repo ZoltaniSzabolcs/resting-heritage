@@ -40,6 +40,18 @@ const showingNavigationDropdown = ref(false);
                                     Dashboard
                                 </NavLink>
                             </div>
+
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                            >
+                                <NavLink
+                                    :href="route('cemeteries.index')"
+                                    :active="route().current('cemeteries.index') ||
+                                             route().current('cemeteries.create')"
+                                >
+                                    Cemeteries
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div class="hidden sm:ms-6 sm:flex sm:items-center">
