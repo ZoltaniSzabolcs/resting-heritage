@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
 
         $grave = Grave::create([
             'cemetery_id' => $cemetery->id,
-            'plot_number' => 'A-12',
+            'name' => 'A-12',
             'location' => Point::makeGeodetic(23.5896, 46.7646),
         ]);
 
@@ -176,7 +176,7 @@ class DatabaseSeeder extends Seeder
         foreach ($persons as $index => $data) {
             $grave = Grave::create([
                 'cemetery_id' => $cemetery->id,
-                'plot_number' => 'A-' . ($index + 13),
+                'name' => 'A-' . ($index + 13),
                 'location' => Point::makeGeodetic(23.5895 + ($index * 0.0001), 46.7645 + ($index * 0.0001)),
             ]);
 

@@ -7,10 +7,9 @@ use Clickbar\Magellan\Http\Requests\TransformsGeojsonGeometry;
 use Clickbar\Magellan\Rules\GeometryGeojsonRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreGraveRequest extends FormRequest
+class UpdateGraveRequest extends FormRequest
 {
     use TransformsGeojsonGeometry;
-
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -27,7 +26,6 @@ class StoreGraveRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cemetery_id' => ['required', 'exists:cemeteries,id'],
             'name' => ['required', 'string', 'max:255'],
             'location' => ['required', new GeometryGeojsonRule([Point::class])]
         ];
@@ -38,11 +36,10 @@ class StoreGraveRequest extends FormRequest
         return ['location'];
     }
 
-    public function attributes()
+    public function attributes(): array
     {
         return [
             'name' => 'grave name',
-            'cemetery_id' => 'cemetery',
             'location' => 'grave location'
         ];
     }

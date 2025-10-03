@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Filters\CemeteryFilter;
 use App\Http\Requests\StoreCemeteryRequest;
 use App\Http\Requests\UpdateCemeteryRequest;
 use App\Http\Resources\CemeteryResource;
@@ -88,7 +87,6 @@ class CemeteryController extends Controller
     public function destroy(Cemetery $cemetery)
     {
         $cemetery->delete();
-
         return redirect()->route('cemeteries.index');
     }
 }

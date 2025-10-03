@@ -1,22 +1,34 @@
 <script setup>
 import { route } from "ziggy-js";
-import { useForm, Link, Head } from '@inertiajs/vue3'
+import { useForm, Link, usePage, Head } from '@inertiajs/vue3'
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import InputError from "@/Components/InputError.vue";
 
+defineProps({
+    grave: {
+        type: Object,
+        required: true,
+    }
+})
+
+let grave = usePage().props.grave.data
+
 const form = useForm({
-    name: '',
-    city: '',
-    description: ''
+    cemeteryId: grave.cemeteryId,
+    name: grave.name,
+    location: {
+        type: "Point",
+        coordinates: grave.location.coordinates
+    },
 })
 
 function submit() {
-    form.post(route('cemeteries.store'))
+    form.put(route('graves.update', grave.id))
 }
 </script>
 
 <template>
-    <Head title="Create cemetery" />
+    <Head title="Edit grave" />
 
     <AuthenticatedLayout>
         <div class="max-w-4xl mx-auto p-6">
@@ -24,22 +36,22 @@ function submit() {
             <nav class="mb-6 text-sm text-gray-500">
                 <ol class="list-reset flex">
                     <li>
-                        <Link :href="route('cemeteries.index')" class="hover:text-blue-600">Cemeteries</Link>
+                        <Link :href="route('graves.index')" class="hover:text-blue-600">Graves</Link>
                     </li>
                     <li><span class="mx-2">/</span></li>
-                    <li class="text-gray-700 font-semibold">Create</li>
+                    <li class="text-gray-700 font-semibold">Update</li>
                 </ol>
             </nav>
 
             <!-- Title -->
-            <h1 class="text-2xl font-semibold mb-6">Create Cemetery</h1>
+            <h1 class="text-2xl font-semibold mb-6">Update Grave</h1>
 
             <!-- Form -->
             <div class="bg-white rounded-lg shadow p-6">
                 <form @submit.prevent="submit" class="space-y-4">
-                    <!-- Name -->
+                    <!-- Plot Number -->
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Plot Number</label>
                         <input
                             v-model="form.name"
                             id="name"
@@ -54,55 +66,43 @@ function submit() {
                         <InputError :message="form.errors.name"/>
                     </div>
 
-                    <!-- City -->
+                    <!-- Longitude -->
                     <div>
-                        <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+                        <label for="location.coordinates[0]" class="block text-sm font-medium text-gray-700">Longitude</label>
                         <input
-                            v-model="form.city"
-                            id="city"
+                            v-model="form.location.coordinates[0]"
+                            id="location.coordinates[0]"
                             type="text"
                             :class="[
           'mt-1 block w-full rounded-md shadow-sm sm:text-sm',
-          form.errors.city
+          form.errors.name
             ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
             : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
         ]"
                         />
-                        <InputError :message="form.errors.city"/>
+                        <InputError :message="form.errors.location"/>
                     </div>
 
-                    <!-- Description -->
+                    <!-- Latitude -->
                     <div>
-                        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                        <textarea
-                            v-model="form.description"
-                            id="description"
-                            rows="3"
+                        <label for="location.coordinates[1]" class="block text-sm font-medium text-gray-700">Latitude</label>
+                        <input
+                            v-model="form.location.coordinates[1]"
+                            id="location.coordinates[1]"
+                            type="text"
                             :class="[
           'mt-1 block w-full rounded-md shadow-sm sm:text-sm',
-          form.errors.description
+          form.errors.name
             ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
             : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
         ]"
                         />
-                        <InputError :message="form.errors.description"/>
+                        <InputError :message="form.errors.location"/>
                     </div>
 
                     <!-- Buttons -->
                     <div class="flex justify-end space-x-2">
-                        <Link
-                            :href="route('cemeteries.index')"
-                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition"
-                        >
-                            Cancel
-                        </Link>
-                        <button
-                            type="submit"
-                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition disabled:opacity-50"
-                            :disabled="form.processing"
-                        >
-                            Save
-                        </button>
+                        o
                     </div>
                 </form>
             </div>

@@ -22,16 +22,23 @@ class Grave extends Model
 
     protected $fillable = [
         'cemetery_id',
-        'plot_number',
+        'name',
         'location'
     ];
 
     protected $attributes = [
-        'plot_number' => '',
+        'name' => '',
     ];
 
     protected $casts = [
         'location' => Point::class,
+    ];
+
+    protected array $postgisColumns = [
+        'location' => [
+            'type' => 'geometry',
+            'srid' => 4326,
+        ],
     ];
 
     public function cemetery() : BelongsTo

@@ -13,7 +13,7 @@ return new class extends Migration {
         if (!Schema::hasTable('graves')) {
             Schema::create('graves', function (Blueprint $table) {
                 $table->uuid('id')->primary();
-                $table->string('plot_number')->nullable();
+                $table->string('name')->nullable();
                 $table->magellanPoint('location', 4326)->nullable();
                 $table->timestamps();
             });

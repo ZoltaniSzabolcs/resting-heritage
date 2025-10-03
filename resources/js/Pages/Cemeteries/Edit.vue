@@ -1,6 +1,6 @@
 <script setup>
 import { route } from "ziggy-js";
-import { useForm, Link, usePage } from '@inertiajs/vue3'
+import { useForm, Link, usePage, Head } from '@inertiajs/vue3'
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import InputError from "@/Components/InputError.vue";
 
@@ -25,6 +25,8 @@ function submit() {
 </script>
 
 <template>
+    <Head title="Edit cemetery" />
+
     <AuthenticatedLayout>
         <div class="max-w-4xl mx-auto p-6">
             <!-- Breadcrumb -->

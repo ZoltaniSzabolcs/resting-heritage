@@ -24,7 +24,7 @@ class GraveFactory extends Factory
     {
         return [
             'cemetery_id' => Cemetery::factory(),
-            'plot_number' => $this->faker->regexify('[A-Z]-[0-9]{3}'),
+            'name' => $this->faker->regexify('[A-Z]-[0-9]{3}'),
             'location' => Point::makeGeodetic($this->faker->latitude(), $this->faker->longitude()),
         ];
     }

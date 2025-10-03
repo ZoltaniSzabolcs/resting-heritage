@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Filters\PersonsFilter;
+use App\Http\Requests\StorePersonRequest;
+use App\Http\Requests\UpdatePersonRequest;
 use App\Http\Resources\PersonResource;
+use App\Models\Grave;
 use App\Models\Person;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class PersonController extends Controller
 {
@@ -14,32 +19,44 @@ class PersonController extends Controller
      */
     public function index(Request $request)
     {
-        $filter = new PersonsFilter();
-        $filterItems = $filter->transform($request);
+        $perPage = $request->query('per_page');
+        $perPage = $perPage ?? 10;
 
-        $perPage = $request->query('per_page') ?? 15;
+        $personsQuery = Person::query();
+        $this->applySearch($personsQuery, $request->search);
 
-        return PersonResource::collection(Person::where($filterItems)->paginate($perPage)->appends($request->query()));
+        return Inertia::render('Persons/index', [
+            'persons' => PersonResource::collection(
+                $personsQuery->paginate($perPage)),
+            'search' => $request->search ?? '',
+        ]);
+    }
+
+    protected function applySearch($query, $search) {
+        return $query->when($search, function($query, $search) {
+            $query->where('first_name', 'like', '%'.$search.'%');
+        });
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create(Request $request)
+    {
+        $grave = Grave::findOrFail($request->get('graveId'));
+
+        return Inertia::render('Persons/Create', [
+            'grave' => $grave,
+        ]);
     }
 
     /**
      * Store a newly created person in storage.
      */
-    public function store(Request $request)
+    public function store(StorePersonRequest $request)
     {
-        $validated = $request->validate([
-            'grave_id' => 'nullable|exists:graves,id',
-            'full_name' => 'required|string|max:255',
-            'birth_date' => 'nullable|date',
-            'death_date' => 'nullable|date',
-            'birth_place' => 'nullable|string|max:255',
-            'death_place' => 'nullable|string|max:255',
-            'biography' => 'nullable|string',
-            'occupation' => 'nullable|string|max:255',
-            'image_url' => 'nullable|url',
-        ]);
-
-        return response()->json(Person::create($validated), 201);
+        Person::create($request->validated());
+        return redirect()->route('persons.index');
     }
 
     /**
@@ -51,37 +68,32 @@ class PersonController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Person $person)
+    {
+        return inertia('Persons/Edit', [
+            'person' => PersonResource::make($person),
+        ]);
+    }
+
+    /**
      * Update the specified person.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdatePersonRequest $request, Person $person)
     {
-        $person = Person::findOrFail($id);
-
-        $validated = $request->validate([
-            'grave_id' => 'nullable|exists:graves,id',
-            'full_name' => 'sometimes|required|string|max:255',
-            'birth_date' => 'nullable|date',
-            'death_date' => 'nullable|date',
-            'birth_place' => 'nullable|string|max:255',
-            'death_place' => 'nullable|string|max:255',
-            'biography' => 'nullable|string',
-            'occupation' => 'nullable|string|max:255',
-            'image_url' => 'nullable|url',
-        ]);
-
-        $person->update($validated);
-
-        return response()->json($person);
+        Log::info('BEFORE routing another direction');
+        $person->update($request->validated());
+        Log::info('AFTER routing another direction');
+        return redirect()->route('persons.index');
     }
 
     /**
      * Remove the specified person.
      */
-    public function destroy(string $id)
+    public function destroy(Person $person)
     {
-        $person = Person::findOrFail($id);
         $person->delete();
-
-        return response()->noContent();
+        return redirect()->route('persons.index');
     }
 }
