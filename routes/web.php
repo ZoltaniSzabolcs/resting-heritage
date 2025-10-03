@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\CemeteryController;
+use App\Http\Controllers\GraveController;
+use App\Http\Controllers\PersonController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -24,4 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
+
+Route::resource('cemeteries', CemeteryController::class);
+Route::resource('graves', GraveController::class);
+Route::resource('persons', PersonController::class);
