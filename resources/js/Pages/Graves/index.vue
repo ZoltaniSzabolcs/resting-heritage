@@ -31,6 +31,8 @@ const map = ref();
 const mapContainer = ref();
 const markers = [];
 
+const deleteForm = useForm();
+
 onMounted(() => {
     map.value = leaflet.map(mapContainer.value).setView([46.762353, 23.5931572], 15);
     leaflet.tileLayer(
@@ -52,6 +54,37 @@ const updateGraveLocations = () => {
             // GeoJSON Point = [lon, lat], Leaflet = [lat, lon] !!!
             const latlng = [grave.location.coordinates[1], grave.location.coordinates[0]]
             const marker = leaflet.marker(latlng).addTo(map.value);
+
+            const popupContent = `
+          <div>
+            <strong>${grave.name}</strong><br/>
+            <button class="edit-btn" data-id="${grave.id}"
+              style="margin-top:5px; padding:4px 8px; background:#4f46e5; color:white; border:none; border-radius:4px; cursor:pointer;">
+              Edit
+            </button>
+            <button class="delete-btn" data-id="${grave.id}"
+              style="margin-top:5px; margin-left:5px; padding:4px 8px; background:#dc2626; color:white; border:none; border-radius:4px; cursor:pointer;">
+              Delete
+            </button>
+          </div>
+        `;
+
+            marker.bindPopup(popupContent);
+
+            marker.on("popupopen", (e) => {
+                const popupNode = e.popup.getElement();
+
+                popupNode.querySelector(".edit-btn")?.addEventListener("click", () => {
+                    router.get(route("graves.edit", grave.id));
+                });
+
+                popupNode.querySelector(".delete-btn")?.addEventListener("click", () => {
+                    if (confirm("Are you sure you want to delete this grave?")) {
+                        deleteForm.delete(route("graves.destroy", grave.id));
+                    }
+                });
+            });
+
             markers.push(marker);
             bounds.push(latlng);
         }
@@ -97,8 +130,6 @@ watch(
         visitWithParams();
     }
 )
-
-const deleteForm = useForm();
 
 const deleteGrave = (graveId) => {
     if (confirm("Are you sure you want to delete this grave?")) {
