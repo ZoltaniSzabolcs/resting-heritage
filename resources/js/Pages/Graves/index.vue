@@ -1,10 +1,11 @@
 <script setup>
 import { route } from 'ziggy-js';
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { Link, useForm, router, usePage, Head } from "@inertiajs/vue3";
 import PaginationBar from "@/Components/PaginationBar.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import MagnifyingGlass from "@/Components/Icons/MagnifyingGlass.vue";
+import leaflet from "leaflet";
 
 defineProps({
     graves: {
@@ -16,8 +17,45 @@ defineProps({
         required: false
     },
 })
+const graves = usePage().props.graves;
+const search = ref(usePage().props.search)
+const pageNumber = ref(1);
+const coordinates = ref([]);
+const map = ref();
+const mapContainer = ref();
+const markers = [];
 
-let search = ref(usePage().props.search), pageNumber = ref(1);
+onMounted(() => {
+    map.value = leaflet.map(mapContainer.value).setView([46.762353, 23.5931572], 15);
+    leaflet.tileLayer(
+        'https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 22,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map.value);
+    updateGraveLocations();
+})
+
+const updateGraveLocations = () => {
+    markers.forEach(m => map.value.removeLayer(m));
+    markers.length = 0;
+
+    let bounds = [];
+
+
+    for (const grave of graves.data) {
+        if (grave.location?.coordinates) {
+            // GeoJSON Point = [lon, lat], Leaflet = [lat, lon] !!!
+            const latlng = [grave.location.coordinates[1], grave.location.coordinates[0]]
+            const marker = leaflet.marker(latlng).addTo(map.value);
+            markers.push(marker);
+            bounds.push(latlng);
+        }
+    }
+    if (bounds.length > 0) {
+        map.value.fitBounds(bounds);
+    }
+}
+
 let gravesUrl = computed(() => {
     let url = new URL(route('graves.index'))
     url.searchParams.append('page', pageNumber.value)
@@ -38,8 +76,12 @@ watch(
     (newGravesUrl) => {
         router.visit(newGravesUrl, {
             preserveScroll: true,
-            preserveState: true,
+            preserveState: false,
             replace: true,
+            onSuccess: (page) => {
+                graves.value = page.props.graves;
+                updateGraveLocations();
+            }
         })
     })
 
@@ -54,7 +96,7 @@ watch(
 
 const deleteForm = useForm();
 
-const deleteGrave= (graveId) => {
+const deleteGrave = (graveId) => {
     if (confirm("Are you sure you want to delete this grave?")) {
         deleteForm.delete(route('graves.destroy', graveId))
     }
@@ -69,7 +111,7 @@ const addPerson = (graveId) => {
 </script>
 
 <template>
-    <Head title="Graves" />
+    <Head title="Graves"/>
 
     <AuthenticatedLayout>
         <div class="p-6 max-w-7xl mx-auto">
@@ -95,6 +137,8 @@ const addPerson = (graveId) => {
                     focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
             </div>
+
+            <div ref="mapContainer" class="w-full h-96"></div>
 
             <table class="min-w-full border border-gray-200 shadow-sm rounded-lg overflow-hidden">
                 <thead class="bg-gray-100">
