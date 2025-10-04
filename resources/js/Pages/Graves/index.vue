@@ -1,6 +1,6 @@
 <script setup>
 import { route } from 'ziggy-js';
-import { computed, onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { Link, useForm, router, usePage, Head } from "@inertiajs/vue3";
 import PaginationBar from "@/Components/PaginationBar.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
@@ -14,13 +14,19 @@ defineProps({
     },
     search: {
         type: String,
-        required: false
+        required: false,
     },
+    page: {
+        type: [Number, String],
+        required: false,
+    }
 })
+
 const graves = usePage().props.graves;
-const search = ref(usePage().props.search)
-const pageNumber = ref(1);
-const coordinates = ref([]);
+const search = ref(usePage().props.search ?? "");
+const pageNumber = ref(usePage().props.page ?? 1);
+
+const searchInput = ref(null);
 const map = ref();
 const mapContainer = ref();
 const markers = [];
@@ -29,7 +35,7 @@ onMounted(() => {
     map.value = leaflet.map(mapContainer.value).setView([46.762353, 23.5931572], 15);
     leaflet.tileLayer(
         'https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 22,
+            maxZoom: 19,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map.value);
     updateGraveLocations();
@@ -40,7 +46,6 @@ const updateGraveLocations = () => {
     markers.length = 0;
 
     let bounds = [];
-
 
     for (const grave of graves.data) {
         if (grave.location?.coordinates) {
@@ -56,43 +61,42 @@ const updateGraveLocations = () => {
     }
 }
 
-let gravesUrl = computed(() => {
-    let url = new URL(route('graves.index'))
-    url.searchParams.append('page', pageNumber.value)
+const visitWithParams = () => {
+    let url = new URL(route('graves.index'));
+    url.searchParams.append('page', pageNumber.value);
 
     if (search.value) {
         url.searchParams.append('search', search.value);
     }
 
-    return url;
-})
+    router.visit(url, {
+        preserveScroll: true,
+        preserveState: false,
+        replace: true,
+        onSuccess: () => {
+            updateGraveLocations();
+            if (searchInput.value) {
+                searchInput.value.focus();
+                console.log(searchInput);
+                const val = searchInput.value.value;
+                searchInput.value.setSelectionRange(val.length, val.length);
+            }
+        }
+    });
+};
 
 const updatedPageNumber = (link) => {
     pageNumber.value = link.url.split("=")[1];
+    visitWithParams();
 }
 
 watch(
-    () => gravesUrl.value,
-    (newGravesUrl) => {
-        router.visit(newGravesUrl, {
-            preserveScroll: true,
-            preserveState: false,
-            replace: true,
-            onSuccess: (page) => {
-                graves.value = page.props.graves;
-                updateGraveLocations();
-            }
-        })
-    })
-
-watch(
     () => search.value,
-    (newSearch) => {
-        if (newSearch) {
-            pageNumber.value = 1;
-        }
-    })
-
+    () => {
+        pageNumber.value = 1;
+        visitWithParams();
+    }
+)
 
 const deleteForm = useForm();
 
@@ -107,8 +111,8 @@ const addPerson = (graveId) => {
         graveId: graveId,
     })
 }
-
 </script>
+
 
 <template>
     <Head title="Graves"/>
@@ -127,6 +131,7 @@ const addPerson = (graveId) => {
                 </div>
 
                 <input
+                    ref="searchInput"
                     v-model="search"
                     type="text"
                     autocomplete="off"
