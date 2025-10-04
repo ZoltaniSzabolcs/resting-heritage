@@ -40,6 +40,45 @@ const showingNavigationDropdown = ref(false);
                                     Dashboard
                                 </NavLink>
                             </div>
+
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                            >
+                                <NavLink
+                                    :href="route('cemeteries.index')"
+                                    :active="route().current('cemeteries.index') ||
+                                             route().current('cemeteries.create') ||
+                                             route().current('cemeteries.edit')"
+                                >
+                                    Cemeteries
+                                </NavLink>
+                            </div>
+
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                            >
+                                <NavLink
+                                    :href="route('graves.index')"
+                                    :active="route().current('graves.index') ||
+                                             route().current('graves.create') ||
+                                             route().current('graves.edit')"
+                                >
+                                    Graves
+                                </NavLink>
+                            </div>
+
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                            >
+                                <NavLink
+                                    :href="route('persons.index')"
+                                    :active="route().current('persons.index') ||
+                                             route().current('persons.create') ||
+                                             route().current('persons.edit')"
+                                >
+                                    Persons
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div class="hidden sm:ms-6 sm:flex sm:items-center">
@@ -148,6 +187,39 @@ const showingNavigationDropdown = ref(false);
                         </ResponsiveNavLink>
                     </div>
 
+                    <div class="space-y-1 pb-3 pt-2">
+                        <NavLink
+                            :href="route('cemeteries.index')"
+                            :active="route().current('cemeteries.index') ||
+                                             route().current('cemeteries.create') ||
+                                             route().current('cemeteries.edit')"
+                        >
+                            Cemeteries
+                        </NavLink>
+                    </div>
+
+                    <div class="space-y-1 pb-3 pt-2">
+                        <NavLink
+                            :href="route('graves.index')"
+                            :active="route().current('graves.index') ||
+                                             route().current('graves.create') ||
+                                             route().current('graves.edit')"
+                        >
+                            Graves
+                        </NavLink>
+                    </div>
+
+                    <div class="space-y-1 pb-3 pt-2">
+                        <NavLink
+                            :href="route('persons.index')"
+                            :active="route().current('persons.index') ||
+                                             route().current('persons.create') ||
+                                             route().current('persons.edit')"
+                        >
+                            Persons
+                        </NavLink>
+                    </div>
+
                     <!-- Responsive Settings Options -->
                     <div
                         class="border-t border-gray-200 pb-1 pt-4"
@@ -185,13 +257,13 @@ const showingNavigationDropdown = ref(false);
                 v-if="$slots.header"
             >
                 <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                    <slot name="header" />
+                    <slot name="header"/>
                 </div>
             </header>
 
             <!-- Page Content -->
             <main>
-                <slot />
+                <slot/>
             </main>
         </div>
     </div>
