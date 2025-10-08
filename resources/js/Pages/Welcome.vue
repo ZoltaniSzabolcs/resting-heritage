@@ -32,7 +32,7 @@ function handleImageError() {
         <img
             id="background"
             class="absolute top-0 min-h-screen min-w-screen"
-            src="../../../storage/app/public/cemetery-2821279.jpg"
+            src="../../../public/storage/cemetery-2821279.jpg"
             alt="background"
         />
         <div
@@ -44,7 +44,7 @@ function handleImageError() {
                 >
                     <div class="flex lg:col-start-2 lg:justify-center">
                         <img
-                            src="../../../storage/app/public/LogoNB.png"
+                            src="../../../public/storage/LogoNB.png"
                             class="h-16 w-auto text-white lg:h-18"
                         />
                     </div>
