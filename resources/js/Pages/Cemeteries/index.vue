@@ -129,6 +129,11 @@ const addGrave = (cemeteryId) => {
                         </Link>
                     </td>
                     <td class="py-2 px-4">
+                        <Link :href="route('cemeteries.edit-boundary', cemetery.id)"
+                              class="text-indigo-600 hover:text-indigo-900">Edit boundary
+                        </Link>
+                    </td>
+                    <td class="py-2 px-4">
                         <Link @click="deleteCemetery(cemetery.id)" class="text-indigo-600 hover:text-indigo-900">
                             Delete
                         </Link>
