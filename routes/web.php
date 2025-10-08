@@ -37,3 +37,6 @@ Route::resource('persons', PersonController::class);
 Route::get('/cemeteries/{cemetery}/edit-boundary', [CemeteryController::class, 'editBoundary'])->name('cemeteries.edit-boundary');
 Route::put('/cemeteries/{cemetery}/update-boundary', [CemeteryController::class, 'updateBoundary'])->name('cemeteries.update-boundary');
 
+Route::get('/graves/{grave}/edit-boundary', [GraveController::class, 'editBoundary'])->name('graves.edit-boundary');
+Route::put('/graves/{grave}/update-boundary', [GraveController::class, 'updateBoundary'])->name('graves.update-boundary');
+

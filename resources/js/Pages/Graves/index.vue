@@ -41,6 +41,7 @@ onMounted(() => {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map.value);
     updateGraveLocations();
+    console.log(graves);
 })
 
 const updateGraveLocations = () => {
@@ -50,24 +51,24 @@ const updateGraveLocations = () => {
     let bounds = [];
 
     for (const grave of graves.data) {
+        // --- Marker: grave.location ---
         if (grave.location?.coordinates) {
-            // GeoJSON Point = [lon, lat], Leaflet = [lat, lon] !!!
-            const latlng = [grave.location.coordinates[1], grave.location.coordinates[0]]
+            const latlng = [grave.location.coordinates[1], grave.location.coordinates[0]]; // [lat, lon]
             const marker = leaflet.marker(latlng).addTo(map.value);
 
             const popupContent = `
-          <div>
-            <strong>${grave.name}</strong><br/>
-            <button class="edit-btn" data-id="${grave.id}"
-              style="margin-top:5px; padding:4px 8px; background:#4f46e5; color:white; border:none; border-radius:4px; cursor:pointer;">
-              Edit
-            </button>
-            <button class="delete-btn" data-id="${grave.id}"
-              style="margin-top:5px; margin-left:5px; padding:4px 8px; background:#dc2626; color:white; border:none; border-radius:4px; cursor:pointer;">
-              Delete
-            </button>
-          </div>
-        `;
+                <div>
+                    <strong>${grave.name}</strong><br/>
+                    <button class="edit-btn" data-id="${grave.id}"
+                        style="margin-top:5px; padding:4px 8px; background:#4f46e5; color:white; border:none; border-radius:4px; cursor:pointer;">
+                        Edit
+                    </button>
+                    <button class="delete-btn" data-id="${grave.id}"
+                        style="margin-top:5px; margin-left:5px; padding:4px 8px; background:#dc2626; color:white; border:none; border-radius:4px; cursor:pointer;">
+                        Delete
+                    </button>
+                </div>
+            `;
 
             marker.bindPopup(popupContent);
 
@@ -88,11 +89,40 @@ const updateGraveLocations = () => {
             markers.push(marker);
             bounds.push(latlng);
         }
+
+        // --- Polygon: grave.boundary ---
+        if (grave.boundary?.coordinates?.length) {
+            // GeoJSON Polygon: [ [ [lon, lat], [lon, lat], ... ] ]
+            // Leaflet Polygon: [ [lat, lon], [lat, lon], ... ]
+            const polygonCoords = grave.boundary.coordinates[0].map(coord => [coord[1], coord[0]]);
+            const polygon = leaflet.polygon(polygonCoords, {
+                color: '#4f46e5',
+                weight: 2,
+                fillColor: '#6366f1',
+                fillOpacity: 0.3,
+            }).addTo(map.value);
+
+            polygon.bindPopup(`
+                <div>
+                    <strong>${grave.name}</strong><br/>
+                    Boundary
+                </div>
+            `);
+
+            polygon.on("click", () => {
+                router.get(route("graves.edit", grave.id));
+            });
+
+            markers.push(polygon);
+            bounds.push(...polygonCoords);
+        }
     }
+
     if (bounds.length > 0) {
         map.value.fitBounds(bounds);
     }
-}
+};
+
 
 const visitWithParams = () => {
     let url = new URL(route('graves.index'));
@@ -196,6 +226,13 @@ const addPerson = (graveId) => {
                         <Link :href="route('graves.edit', grave.id)"
                               class="px-2 text-indigo-600 hover:text-indigo-900">Edit
                         </Link>
+                    </td>
+                    <td class="py-2 px-4">
+                        <Link :href="route('graves.edit-boundary', grave.id)"
+                              class="px-2 text-indigo-600 hover:text-indigo-900">Edit boundary
+                        </Link>
+                    </td>
+                    <td class="py-2 px-4">
                         <Link @click="deleteGrave(grave.id)"
                               class="px-2 text-indigo-600 hover:text-indigo-900">
                             Delete

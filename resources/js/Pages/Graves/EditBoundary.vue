@@ -7,12 +7,12 @@ import "@geoman-io/leaflet-geoman-free";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 import InputError from "@/Components/InputError.vue";
 
-const cemetery = usePage().props.cemetery;
+const grave = usePage().props.grave;
 const mapContainer = ref();
 let map, drawnLayer = null;
 
 const form = useForm({
-    boundary: cemetery.boundary ?? null,
+    boundary: grave.boundary ?? null,
 });
 
 onMounted(() => {
@@ -36,8 +36,8 @@ onMounted(() => {
         removalMode: true
     });
 
-    if (cemetery.boundary) {
-        drawnLayer = leaflet.geoJSON(cemetery.boundary).addTo(map);
+    if (grave.boundary) {
+        drawnLayer = leaflet.geoJSON(grave.boundary).addTo(map);
         map.fitBounds(drawnLayer.getBounds());
     }
 
@@ -72,8 +72,8 @@ const saveBoundary = () => {
         form.boundary = geojson.features[0].geometry;
     }
 
-    form.put(route('cemeteries.update-boundary', cemetery.id), {
-        onSuccess: () => router.visit(route('cemeteries.index'))
+    form.put(route('graves.update-boundary', grave.id), {
+        onSuccess: () => router.visit(route('graves.index'))
     });
 };
 </script>
@@ -81,7 +81,7 @@ const saveBoundary = () => {
 <template>
     <div class="p-6">
         <h1 class="text-xl font-semibold mb-4">
-            Edit boundary for {{ cemetery.name }}
+            Edit boundary for {{ grave.name }}
         </h1>
 
         <div class="h-screen">

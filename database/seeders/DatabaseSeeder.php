@@ -44,7 +44,17 @@ class DatabaseSeeder extends Seeder
         $grave = Grave::create([
             'cemetery_id' => $cemetery->id,
             'name' => 'A-12',
-            'location' => Point::makeGeodetic(46.76345066378609, 23.593751816660532),
+            'location' => Point::makeGeodetic(46.76425200008415,23.593785439517113),
+            'boundary' => Polygon::make(
+                [LineString::make(
+                    [
+                        Point::makeGeodetic(46.76432954847704,23.59384842359027),
+                        Point::makeGeodetic(46.764217818050284,23.593893237348972),
+                        Point::makeGeodetic(46.76418186788495,23.593692686416354),
+                        Point::makeGeodetic(46.76427904587814,23.593652008471658),
+                        Point::makeGeodetic(46.76432954847704,23.59384842359027),
+                    ]
+                )],)
         ]);
 
         Person::create([
@@ -174,12 +184,24 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($persons as $index => $data) {
+            $lat = 46.76345066378609 + (rand(-35, 35) * 0.0001);
+            $lng = 23.593751816660532 + (rand(-35, 35) * 0.0001);
+            $location = Point::makeGeodetic($lat, $lng);
             $grave = Grave::create([
                 'cemetery_id' => $cemetery->id,
                 'name' => 'A-' . ($index + 13),
-                'location' => Point::makeGeodetic(
-                    46.76345066378609 + (rand(-50, 50) * 0.0001),
-                    23.593751816660532 + (rand(-50, 50) * 0.0001)),
+                'location' => $location,
+                'boundary' => Polygon::make(
+                    [LineString::make(
+                        [
+                            $location,
+                            Point::makeGeodetic($lat + (rand(-25,25) * 0.00001), $lng + rand(-25, 25) * 0.00001),
+                            Point::makeGeodetic($lat + (rand(-25,25) * 0.00001), $lng + rand(-25, 25) * 0.00001),
+                            Point::makeGeodetic($lat + (rand(-25,25) * 0.00001), $lng + rand(-25, 25) * 0.00001),
+                            $location,
+                        ]
+                    )]
+                )
             ]);
 
             Person::create(array_merge($data, [
