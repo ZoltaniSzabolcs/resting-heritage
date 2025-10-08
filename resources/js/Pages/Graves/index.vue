@@ -1,10 +1,11 @@
 <script setup>
 import { route } from 'ziggy-js';
-import { computed, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { Link, useForm, router, usePage, Head } from "@inertiajs/vue3";
 import PaginationBar from "@/Components/PaginationBar.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import MagnifyingGlass from "@/Components/Icons/MagnifyingGlass.vue";
+import leaflet from "leaflet";
 
 defineProps({
     graves: {
@@ -13,48 +14,124 @@ defineProps({
     },
     search: {
         type: String,
-        required: false
+        required: false,
     },
+    page: {
+        type: [Number, String],
+        required: false,
+    }
 })
 
-let search = ref(usePage().props.search), pageNumber = ref(1);
-let gravesUrl = computed(() => {
-    let url = new URL(route('graves.index'))
-    url.searchParams.append('page', pageNumber.value)
+const graves = usePage().props.graves;
+const search = ref(usePage().props.search ?? "");
+const pageNumber = ref(usePage().props.page ?? 1);
+
+const searchInput = ref(null);
+const map = ref();
+const mapContainer = ref();
+const markers = [];
+
+const deleteForm = useForm();
+
+onMounted(() => {
+    map.value = leaflet.map(mapContainer.value).setView([46.762353, 23.5931572], 15);
+    leaflet.tileLayer(
+        'https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map.value);
+    updateGraveLocations();
+})
+
+const updateGraveLocations = () => {
+    markers.forEach(m => map.value.removeLayer(m));
+    markers.length = 0;
+
+    let bounds = [];
+
+    for (const grave of graves.data) {
+        if (grave.location?.coordinates) {
+            // GeoJSON Point = [lon, lat], Leaflet = [lat, lon] !!!
+            const latlng = [grave.location.coordinates[1], grave.location.coordinates[0]]
+            const marker = leaflet.marker(latlng).addTo(map.value);
+
+            const popupContent = `
+          <div>
+            <strong>${grave.name}</strong><br/>
+            <button class="edit-btn" data-id="${grave.id}"
+              style="margin-top:5px; padding:4px 8px; background:#4f46e5; color:white; border:none; border-radius:4px; cursor:pointer;">
+              Edit
+            </button>
+            <button class="delete-btn" data-id="${grave.id}"
+              style="margin-top:5px; margin-left:5px; padding:4px 8px; background:#dc2626; color:white; border:none; border-radius:4px; cursor:pointer;">
+              Delete
+            </button>
+          </div>
+        `;
+
+            marker.bindPopup(popupContent);
+
+            marker.on("popupopen", (e) => {
+                const popupNode = e.popup.getElement();
+
+                popupNode.querySelector(".edit-btn")?.addEventListener("click", () => {
+                    router.get(route("graves.edit", grave.id));
+                });
+
+                popupNode.querySelector(".delete-btn")?.addEventListener("click", () => {
+                    if (confirm("Are you sure you want to delete this grave?")) {
+                        deleteForm.delete(route("graves.destroy", grave.id));
+                    }
+                });
+            });
+
+            markers.push(marker);
+            bounds.push(latlng);
+        }
+    }
+    if (bounds.length > 0) {
+        map.value.fitBounds(bounds);
+    }
+}
+
+const visitWithParams = () => {
+    let url = new URL(route('graves.index'));
+    url.searchParams.append('page', pageNumber.value);
 
     if (search.value) {
         url.searchParams.append('search', search.value);
     }
 
-    return url;
-})
+    router.visit(url, {
+        preserveScroll: true,
+        preserveState: false,
+        replace: true,
+        onSuccess: () => {
+            updateGraveLocations();
+            if (searchInput.value) {
+                searchInput.value.focus();
+                console.log(searchInput);
+                const val = searchInput.value.value;
+                searchInput.value.setSelectionRange(val.length, val.length);
+            }
+        }
+    });
+};
 
 const updatedPageNumber = (link) => {
     pageNumber.value = link.url.split("=")[1];
+    visitWithParams();
 }
 
 watch(
-    () => gravesUrl.value,
-    (newGravesUrl) => {
-        router.visit(newGravesUrl, {
-            preserveScroll: true,
-            preserveState: true,
-            replace: true,
-        })
-    })
-
-watch(
     () => search.value,
-    (newSearch) => {
-        if (newSearch) {
-            pageNumber.value = 1;
-        }
-    })
+    () => {
+        pageNumber.value = 1;
+        visitWithParams();
+    }
+)
 
-
-const deleteForm = useForm();
-
-const deleteGrave= (graveId) => {
+const deleteGrave = (graveId) => {
     if (confirm("Are you sure you want to delete this grave?")) {
         deleteForm.delete(route('graves.destroy', graveId))
     }
@@ -65,11 +142,11 @@ const addPerson = (graveId) => {
         graveId: graveId,
     })
 }
-
 </script>
 
+
 <template>
-    <Head title="Graves" />
+    <Head title="Graves"/>
 
     <AuthenticatedLayout>
         <div class="p-6 max-w-7xl mx-auto">
@@ -85,6 +162,7 @@ const addPerson = (graveId) => {
                 </div>
 
                 <input
+                    ref="searchInput"
                     v-model="search"
                     type="text"
                     autocomplete="off"
@@ -95,6 +173,8 @@ const addPerson = (graveId) => {
                     focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
             </div>
+
+            <div ref="mapContainer" class="w-full h-96"></div>
 
             <table class="min-w-full border border-gray-200 shadow-sm rounded-lg overflow-hidden">
                 <thead class="bg-gray-100">

@@ -30,7 +30,9 @@ class GraveController extends Controller
         $graves = $query->paginate($perPage);
 
         return Inertia::render('Graves/index', [
-            'graves' => GraveResource::collection($graves)
+            'graves' => GraveResource::collection($graves),
+            'search' => $request->get('search', ''),
+            'page' => $request->get('page', 1),
         ]);
     }
 

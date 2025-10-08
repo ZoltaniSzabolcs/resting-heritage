@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\GraveController::create
- * @see app/Http/Controllers/GraveController.php:48
+ * @see app/Http/Controllers/GraveController.php:50
  * @route '/graves/create'
  */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -59,7 +59,7 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\GraveController::create
- * @see app/Http/Controllers/GraveController.php:48
+ * @see app/Http/Controllers/GraveController.php:50
  * @route '/graves/create'
  */
 create.url = (options?: RouteQueryOptions) => {
@@ -68,7 +68,7 @@ create.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\GraveController::create
- * @see app/Http/Controllers/GraveController.php:48
+ * @see app/Http/Controllers/GraveController.php:50
  * @route '/graves/create'
  */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -77,7 +77,7 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\GraveController::create
- * @see app/Http/Controllers/GraveController.php:48
+ * @see app/Http/Controllers/GraveController.php:50
  * @route '/graves/create'
  */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -87,7 +87,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\GraveController::store
- * @see app/Http/Controllers/GraveController.php:61
+ * @see app/Http/Controllers/GraveController.php:63
  * @route '/graves'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -102,7 +102,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\GraveController::store
- * @see app/Http/Controllers/GraveController.php:61
+ * @see app/Http/Controllers/GraveController.php:63
  * @route '/graves'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -111,7 +111,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\GraveController::store
- * @see app/Http/Controllers/GraveController.php:61
+ * @see app/Http/Controllers/GraveController.php:63
  * @route '/graves'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -121,7 +121,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\GraveController::show
- * @see app/Http/Controllers/GraveController.php:70
+ * @see app/Http/Controllers/GraveController.php:72
  * @route '/graves/{grave}'
  */
 export const show = (args: { grave: string | { id: string } } | [grave: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -136,7 +136,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\GraveController::show
- * @see app/Http/Controllers/GraveController.php:70
+ * @see app/Http/Controllers/GraveController.php:72
  * @route '/graves/{grave}'
  */
 show.url = (args: { grave: string | { id: string } } | [grave: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -169,7 +169,7 @@ show.url = (args: { grave: string | { id: string } } | [grave: string | { id: st
 
 /**
 * @see \App\Http\Controllers\GraveController::show
- * @see app/Http/Controllers/GraveController.php:70
+ * @see app/Http/Controllers/GraveController.php:72
  * @route '/graves/{grave}'
  */
 show.get = (args: { grave: string | { id: string } } | [grave: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -178,7 +178,7 @@ show.get = (args: { grave: string | { id: string } } | [grave: string | { id: st
 })
 /**
 * @see \App\Http\Controllers\GraveController::show
- * @see app/Http/Controllers/GraveController.php:70
+ * @see app/Http/Controllers/GraveController.php:72
  * @route '/graves/{grave}'
  */
 show.head = (args: { grave: string | { id: string } } | [grave: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -188,7 +188,7 @@ show.head = (args: { grave: string | { id: string } } | [grave: string | { id: s
 
 /**
 * @see \App\Http\Controllers\GraveController::edit
- * @see app/Http/Controllers/GraveController.php:78
+ * @see app/Http/Controllers/GraveController.php:80
  * @route '/graves/{grave}/edit'
  */
 export const edit = (args: { grave: string | { id: string } } | [grave: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -203,7 +203,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\GraveController::edit
- * @see app/Http/Controllers/GraveController.php:78
+ * @see app/Http/Controllers/GraveController.php:80
  * @route '/graves/{grave}/edit'
  */
 edit.url = (args: { grave: string | { id: string } } | [grave: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -236,7 +236,7 @@ edit.url = (args: { grave: string | { id: string } } | [grave: string | { id: st
 
 /**
 * @see \App\Http\Controllers\GraveController::edit
- * @see app/Http/Controllers/GraveController.php:78
+ * @see app/Http/Controllers/GraveController.php:80
  * @route '/graves/{grave}/edit'
  */
 edit.get = (args: { grave: string | { id: string } } | [grave: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -245,7 +245,7 @@ edit.get = (args: { grave: string | { id: string } } | [grave: string | { id: st
 })
 /**
 * @see \App\Http\Controllers\GraveController::edit
- * @see app/Http/Controllers/GraveController.php:78
+ * @see app/Http/Controllers/GraveController.php:80
  * @route '/graves/{grave}/edit'
  */
 edit.head = (args: { grave: string | { id: string } } | [grave: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -255,7 +255,7 @@ edit.head = (args: { grave: string | { id: string } } | [grave: string | { id: s
 
 /**
 * @see \App\Http\Controllers\GraveController::update
- * @see app/Http/Controllers/GraveController.php:88
+ * @see app/Http/Controllers/GraveController.php:90
  * @route '/graves/{grave}'
  */
 export const update = (args: { grave: string | { id: string } } | [grave: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -270,7 +270,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\GraveController::update
- * @see app/Http/Controllers/GraveController.php:88
+ * @see app/Http/Controllers/GraveController.php:90
  * @route '/graves/{grave}'
  */
 update.url = (args: { grave: string | { id: string } } | [grave: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -303,7 +303,7 @@ update.url = (args: { grave: string | { id: string } } | [grave: string | { id: 
 
 /**
 * @see \App\Http\Controllers\GraveController::update
- * @see app/Http/Controllers/GraveController.php:88
+ * @see app/Http/Controllers/GraveController.php:90
  * @route '/graves/{grave}'
  */
 update.put = (args: { grave: string | { id: string } } | [grave: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -312,7 +312,7 @@ update.put = (args: { grave: string | { id: string } } | [grave: string | { id: 
 })
 /**
 * @see \App\Http\Controllers\GraveController::update
- * @see app/Http/Controllers/GraveController.php:88
+ * @see app/Http/Controllers/GraveController.php:90
  * @route '/graves/{grave}'
  */
 update.patch = (args: { grave: string | { id: string } } | [grave: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -322,7 +322,7 @@ update.patch = (args: { grave: string | { id: string } } | [grave: string | { id
 
 /**
 * @see \App\Http\Controllers\GraveController::destroy
- * @see app/Http/Controllers/GraveController.php:97
+ * @see app/Http/Controllers/GraveController.php:99
  * @route '/graves/{grave}'
  */
 export const destroy = (args: { grave: string | { id: string } } | [grave: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -337,7 +337,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\GraveController::destroy
- * @see app/Http/Controllers/GraveController.php:97
+ * @see app/Http/Controllers/GraveController.php:99
  * @route '/graves/{grave}'
  */
 destroy.url = (args: { grave: string | { id: string } } | [grave: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
@@ -370,7 +370,7 @@ destroy.url = (args: { grave: string | { id: string } } | [grave: string | { id:
 
 /**
 * @see \App\Http\Controllers\GraveController::destroy
- * @see app/Http/Controllers/GraveController.php:97
+ * @see app/Http/Controllers/GraveController.php:99
  * @route '/graves/{grave}'
  */
 destroy.delete = (args: { grave: string | { id: string } } | [grave: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({

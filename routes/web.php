@@ -33,3 +33,7 @@ require __DIR__ . '/auth.php';
 Route::resource('cemeteries', CemeteryController::class);
 Route::resource('graves', GraveController::class);
 Route::resource('persons', PersonController::class);
+
+Route::get('/cemeteries/{cemetery}/edit-boundary', [CemeteryController::class, 'editBoundary'])->name('cemeteries.edit-boundary');
+Route::put('/cemeteries/{cemetery}/update-boundary', [CemeteryController::class, 'updateBoundary'])->name('cemeteries.update-boundary');
+

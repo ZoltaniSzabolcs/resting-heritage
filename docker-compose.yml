@@ -1,15 +1,16 @@
 version: '3.8'
 services:
     rh-app:
-        build:
-            context: .
+        build: .
+        restart: always
         ports:
-            - 9000:9000
+            - 8080:80
         volumes:
-            -
             - .:/var/www/html
         depends_on:
             - rh-db
+        networks:
+            - appnet
     rh-db:
         image: pgrouting/pgrouting
         restart: always
@@ -19,11 +20,19 @@ services:
             POSTGRES_USER: ${DB_USERNAME}
             POSTGRES_PASSWORD: ${DB_PASSWORD}
             POSTGRES_DB: ${DB_DATABASE}
+        networks:
+            - appnet
     rh-pgadmin:
         image: dpage/pgadmin4
         environment:
             PGADMIN_DEFAULT_EMAIL: ${PGA_EMAIL}
             PGADMIN_DEFAULT_PASSWORD: ${PGA_PASSWORD}
+        networks:
+            - appnet
 
 volumes:
     rhdata:
+
+networks:
+    appnet:
+        driver: bridge

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCemeteryRequest;
+use App\Http\Requests\UpdateCemeteryBoundaryRequest;
 use App\Http\Requests\UpdateCemeteryRequest;
 use App\Http\Resources\CemeteryResource;
 use App\Http\Resources\PersonResource;
@@ -71,6 +72,23 @@ class CemeteryController extends Controller
             'cemetery' => CemeteryResource::make($cemetery),
         ]);
     }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function editBoundary(Cemetery $cemetery)
+    {
+        return inertia('Cemeteries/EditBoundary', [
+            'cemetery' => $cemetery,
+        ]);
+    }
+
+    public function updateBoundary(UpdateCemeteryBoundaryRequest $request, Cemetery $cemetery)
+    {
+        $cemetery->update($request->validated());
+        return redirect()->route('cemeteries.index');
+    }
+
 
     /**
      * Update the specified resource in storage.

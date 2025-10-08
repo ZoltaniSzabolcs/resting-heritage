@@ -3,6 +3,7 @@ import { route } from "ziggy-js";
 import { useForm, Link, usePage, Head } from '@inertiajs/vue3'
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import InputError from "@/Components/InputError.vue";
+import CoordinatePicker from "@/Components/CoordinatePicker.vue";
 
 defineProps({
     grave: {
@@ -66,43 +67,19 @@ function submit() {
                         <InputError :message="form.errors.name"/>
                     </div>
 
-                    <!-- Longitude -->
-                    <div>
-                        <label for="location.coordinates[0]" class="block text-sm font-medium text-gray-700">Longitude</label>
-                        <input
-                            v-model="form.location.coordinates[0]"
-                            id="location.coordinates[0]"
-                            type="text"
-                            :class="[
-          'mt-1 block w-full rounded-md shadow-sm sm:text-sm',
-          form.errors.name
-            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-            : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
-        ]"
-                        />
-                        <InputError :message="form.errors.location"/>
-                    </div>
-
-                    <!-- Latitude -->
-                    <div>
-                        <label for="location.coordinates[1]" class="block text-sm font-medium text-gray-700">Latitude</label>
-                        <input
-                            v-model="form.location.coordinates[1]"
-                            id="location.coordinates[1]"
-                            type="text"
-                            :class="[
-          'mt-1 block w-full rounded-md shadow-sm sm:text-sm',
-          form.errors.name
-            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-            : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
-        ]"
-                        />
-                        <InputError :message="form.errors.location"/>
-                    </div>
+                    <CoordinatePicker label="Location" v-model="form.location"/>
 
                     <!-- Buttons -->
                     <div class="flex justify-end space-x-2">
-                        o
+                        <Link :href="route('graves.index')"
+                              class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition">
+                            Cancel
+                        </Link>
+                        <button type="submit"
+                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition disabled:opacity-50"
+                                :disabled="form.processing">
+                            Update
+                        </button>
                     </div>
                 </form>
             </div>

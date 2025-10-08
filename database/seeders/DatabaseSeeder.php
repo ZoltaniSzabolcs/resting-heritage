@@ -31,20 +31,20 @@ class DatabaseSeeder extends Seeder
             'description' => 'A híres erdélyi temető, történelmi jelentőségű sírokkal.',
             'boundary' => Polygon::make(
                 [LineString::make(
-                    [Point::makeGeodetic(23.589, 46.765),
-                        Point::makeGeodetic(23.59, 46.765),
-                        Point::makeGeodetic(23.59, 46.764),
-                        Point::makeGeodetic(23.589, 46.764),
-                        Point::makeGeodetic(23.589, 46.765)]
+                    [Point::makeGeodetic(46.76572442352034, 23.59094724655162),
+                        Point::makeGeodetic(46.76672883391196, 23.595499511842107),
+                        Point::makeGeodetic(46.75869559282614, 23.598332438740496),
+                        Point::makeGeodetic(46.757918554157165, 23.594579800777204),
+                        Point::makeGeodetic(46.76572442352034, 23.59094724655162)]
                 )], 4326),
-            'entrance' => Point::makeGeodetic(23.5895, 46.7645),
-            'center' => Point::makeGeodetic(23.5897, 46.7647),
+            'entrance' => Point::makeGeodetic(46.76592006927427, 23.591395024490673),
+            'center' => Point::makeGeodetic(46.76156691716381, 23.59350499181761),
         ]);
 
         $grave = Grave::create([
             'cemetery_id' => $cemetery->id,
             'name' => 'A-12',
-            'location' => Point::makeGeodetic(23.5896, 46.7646),
+            'location' => Point::makeGeodetic(46.76345066378609, 23.593751816660532),
         ]);
 
         Person::create([
@@ -177,7 +177,9 @@ class DatabaseSeeder extends Seeder
             $grave = Grave::create([
                 'cemetery_id' => $cemetery->id,
                 'name' => 'A-' . ($index + 13),
-                'location' => Point::makeGeodetic(23.5895 + ($index * 0.0001), 46.7645 + ($index * 0.0001)),
+                'location' => Point::makeGeodetic(
+                    46.76345066378609 + (rand(-50, 50) * 0.0001),
+                    23.593751816660532 + (rand(-50, 50) * 0.0001)),
             ]);
 
             Person::create(array_merge($data, [

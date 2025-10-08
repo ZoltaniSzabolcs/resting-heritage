@@ -1,28 +1,53 @@
-# 1. Használjuk az official PHP 8.4 FPM imaget (vagy amilyen verziót használsz)
-FROM php:8.4-fpm
+# ------------------------
+# Stage 1: Build stage
+# ------------------------
+FROM composer:2 AS composer_stage
+WORKDIR /app
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --optimize-autoloader --no-scripts
+# ------------------------
+# Stage 2: Frontend build
+# ------------------------
+FROM node:20 AS node_stage
+WORKDIR /app
+COPY package*.json vite.config.js ./
+RUN npm ci
+COPY resources ./resources
+COPY public ./public
+RUN npm run build
 
-# 2. Telepítsük a szükséges PHP kiterjesztéseket (pl. fileinfo, pdo, mbstring, xml stb.)
-RUN apt-get update && apt-get install -y \
-    libzip-dev zip unzip git curl libonig-dev libxml2-dev \
-    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath xml
+# ------------------------
+# Stage 3: Production image
+# ------------------------
+FROM php:8.3-apache as production
 
-# 3. Composer telepítése
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# 4. Munkakönyvtár beállítása
 WORKDIR /var/www/html
 
-# 5. A projekt fájljainak bemásolása
+# Szükséges extension-ök
+RUN apt-get update && apt-get install -y git unzip libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql
+
+# Apache beállítás
+RUN a2enmod rewrite
+
+# Laravel public beállítása DocumentRoot-ként
+RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
+
+# Engedélyezd az .htaccess-t
+RUN echo '<Directory /var/www/html/public>\n\
+    AllowOverride All\n\
+    Require all granted\n\
+</Directory>' > /etc/apache2/conf-available/laravel.conf \
+    && a2enconf laravel
+
 COPY . .
 
-# 6. Composer függőségek telepítése (production/dev az igényektől függ)
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
-# 7. Jogosultságok beállítása (opcionális, ha pl. storage és cache folderhez kell)
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Laravel optimalizálás
+RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
 
-# 8. A PHP-FPM futtatása konténer indításakor
-CMD ["php-fpm"]
+EXPOSE 80
 
-# 9. Exponált port, ha kell (általában a PHP-FPM nem publikus port, de ha pl. Valet, akkor más)
-EXPOSE 9000
+CMD ["apache2-foreground"]

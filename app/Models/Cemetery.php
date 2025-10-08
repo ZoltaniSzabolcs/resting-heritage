@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Clickbar\Magellan\Cast\GeometryCast;
+use Clickbar\Magellan\Data\Geometries\MultiPolygon;
 use Clickbar\Magellan\Data\Geometries\Point;
 use Clickbar\Magellan\Data\Geometries\Polygon;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -36,9 +38,17 @@ class Cemetery extends Model
     ];
 
     protected $casts = [
-        'boundary' => Polygon::class,
+        'boundary' => GeometryCast::class . ':' . Polygon::class,
         'entrance' => Point::class,
         'center' => Point::class,
+    ];
+
+
+    protected array $postgisColumns = [
+        'boundary' => [
+            'type' => 'geometry',
+            'srid' => 4326,
+        ],
     ];
 
     public function graves(): HasMany
