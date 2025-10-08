@@ -3,6 +3,7 @@ import { route } from "ziggy-js";
 import { useForm, Link, Form, usePage, Head } from '@inertiajs/vue3'
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import InputError from "@/Components/InputError.vue";
+import CoordinatePicker from "@/Components/CoordinatePicker.vue";
 
 defineProps({
     cemetery: {
@@ -66,39 +67,7 @@ function submit() {
                         <InputError :message="form.errors.name"/>
                     </div>
 
-                    <!-- Longitude -->
-                    <div>
-                        <label for="longitude" class="block text-sm font-medium text-gray-700">Longitude</label>
-                        <input
-                            v-model="form.location.coordinates[0]"
-                            id="longitude"
-                            type="text"
-                            :class="[
-              'mt-1 block w-full rounded-md shadow-sm sm:text-sm',
-              form.errors.location
-                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
-            ]"
-                        />
-                        <InputError :message="form.errors.location"/>
-                    </div>
-
-                    <!-- Latitude -->
-                    <div>
-                        <label for="latitude" class="block text-sm font-medium text-gray-700">Latitude</label>
-                        <input
-                            v-model="form.location.coordinates[1]"
-                            id="latitude"
-                            type="text"
-                            :class="[
-              'mt-1 block w-full rounded-md shadow-sm sm:text-sm',
-              form.errors.location
-                ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
-            ]"
-                        />
-                        <InputError :message="form.errors.location"/>
-                    </div>
+                    <CoordinatePicker label="Location" v-model="form.location"/>
 
                     <!-- Buttons -->
                     <div class="flex justify-end space-x-2">

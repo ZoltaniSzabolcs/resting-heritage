@@ -14,6 +14,7 @@ return new class extends Migration {
             Schema::create('graves', function (Blueprint $table) {
                 $table->uuid('id')->primary();
                 $table->string('name')->nullable();
+                $table->magellanPolygon('boundary')->nullable();
                 $table->magellanPoint('location', 4326)->nullable();
                 $table->timestamps();
             });

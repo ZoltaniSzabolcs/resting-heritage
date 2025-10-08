@@ -60,8 +60,8 @@ function initMap() {
         drawPolygon: false,
         drawCircleMarker: false,
         drawText: false,
-        editMode: true,
-        dragMode: true,
+        editMode: false,
+        dragMode: false,
         cutPolygon: false,
         removalMode: true,
     });

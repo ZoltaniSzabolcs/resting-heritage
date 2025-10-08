@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Clickbar\Magellan\Cast\GeometryCast;
 use Clickbar\Magellan\Data\Geometries\Point;
+use Clickbar\Magellan\Data\Geometries\Polygon;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +25,8 @@ class Grave extends Model
     protected $fillable = [
         'cemetery_id',
         'name',
-        'location'
+        'location',
+        'boundary',
     ];
 
     protected $attributes = [
@@ -32,6 +35,7 @@ class Grave extends Model
 
     protected $casts = [
         'location' => Point::class,
+        'boundary' => GeometryCast::class . ':' . Polygon::class,
     ];
 
     protected array $postgisColumns = [

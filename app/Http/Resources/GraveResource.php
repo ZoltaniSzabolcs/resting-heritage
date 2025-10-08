@@ -18,7 +18,8 @@ class GraveResource extends JsonResource
             'id' => $this->id,
             'cemeteryId' => $this->cemetery_id,
             'name' => $this->name,
-            'location' =>$this->location,
+            'location' => $this->location,
+            'boundary' => $this->boundary,
         ];
     }
 }

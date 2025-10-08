@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreGraveRequest;
+use App\Http\Requests\UpdateGraveBoundaryRequest;
 use App\Http\Requests\UpdateGraveRequest;
 use App\Http\Resources\GraveResource;
 use App\Models\Cemetery;
@@ -82,6 +83,22 @@ class GraveController extends Controller
         return inertia('Graves/Edit', [
             'grave' => GraveResource::make($grave),
         ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function editBoundary(Grave $grave)
+    {
+        return inertia('Graves/EditBoundary', [
+            'grave' => $grave,
+        ]);
+    }
+
+    public function updateBoundary(UpdateGraveBoundaryRequest $request, Grave $grave)
+    {
+        $grave->update($request->validated());
+        return redirect()->route('graves.index');
     }
 
     /**
