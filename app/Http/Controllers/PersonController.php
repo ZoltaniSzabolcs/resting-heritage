@@ -32,9 +32,16 @@ class PersonController extends Controller
         ]);
     }
 
-    protected function applySearch($query, $search) {
-        return $query->when($search, function($query, $search) {
-            $query->where('first_name', 'like', '%'.$search.'%');
+    protected function applySearch($query, $search)
+    {
+        return $query->when($search, function ($query, $search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'ilike', "%{$search}%")
+                    ->orWhere('last_name', 'ilike', "%{$search}%")
+                    ->orWhereRaw("concat(first_name, ' ', last_name) ilike ?", ["%{$search}%"])
+                    ->orWhereRaw("concat(last_name, ' ', first_name) ilike ?", ["%{$search}%"])
+                    ->orWhereRaw("initials ilike ?", ["%{$search}%"]);
+            });
         });
     }
 
@@ -64,7 +71,17 @@ class PersonController extends Controller
      */
     public function show(Person $person)
     {
-        return new PersonResource($person);
+        $grave = Grave::find($person->grave_id);
+
+        if ($grave) {
+            $grave->increment('view_count');
+            $grave->last_viewed_at = now();
+            $grave->save();
+        }
+
+        return Inertia::render('Persons/Show', [
+            'person' => PersonResource::make($person)
+        ]);
     }
 
     /**
@@ -82,9 +99,7 @@ class PersonController extends Controller
      */
     public function update(UpdatePersonRequest $request, Person $person)
     {
-        Log::info('BEFORE routing another direction');
         $person->update($request->validated());
-        Log::info('AFTER routing another direction');
         return redirect()->route('persons.index');
     }
 

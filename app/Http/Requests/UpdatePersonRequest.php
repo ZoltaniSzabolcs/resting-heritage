@@ -18,11 +18,11 @@ class UpdatePersonRequest extends FormRequest
     {
         $this->merge([
             'grave_id' => $this->graveId,
-            'birth_date' => $this->birthDate,
-            'death_date' => $this->deathDate,
-            'birth_place' => $this->birthPlace,
-            'death_place' => $this->deathPlace,
-            'image_url' => $this->imageUrl,
+            'birth_date' => $this->birth_date,
+            'death_date' => $this->death_date,
+            'birth_place' => $this->birth_place,
+            'death_place' => $this->death_place,
+            'image_url' => $this->image_url,
         ]);
     }
 
