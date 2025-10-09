@@ -72,7 +72,13 @@ class GraveController extends Controller
      */
     public function show(Grave $grave)
     {
-        return new GraveResource($grave);
+        $grave->increment('view_count');
+        $grave->last_viewed_at = now();
+        $grave->save();
+
+        return Inertia::render('Graves/Show', [
+            'grave' => $grave->load('persons', 'cemetery')
+        ]);
     }
 
     /**

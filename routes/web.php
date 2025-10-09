@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CemeteryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GraveController;
 use App\Http\Controllers\PersonController;
 use App\Http\Controllers\ProfileController;
@@ -40,3 +41,7 @@ Route::put('/cemeteries/{cemetery}/update-boundary', [CemeteryController::class,
 Route::get('/graves/{grave}/edit-boundary', [GraveController::class, 'editBoundary'])->name('graves.edit-boundary');
 Route::put('/graves/{grave}/update-boundary', [GraveController::class, 'updateBoundary'])->name('graves.update-boundary');
 
+Route::get('dashboard/heatmap', [DashboardController::class, 'heatmapData']);
+Route::get('/dashboard', fn() => Inertia::render('Dashboard/LivingHeritage'))
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');

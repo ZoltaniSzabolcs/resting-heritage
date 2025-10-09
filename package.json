@@ -24,6 +24,7 @@
     "dependencies": {
         "@geoman-io/leaflet-geoman-free": "^2.18.3",
         "leaflet": "^1.9.4",
+        "leaflet.heat": "^0.2.0",
         "vue-loader": "^17.4.2",
         "ziggy-js": "^2.5.3"
     }

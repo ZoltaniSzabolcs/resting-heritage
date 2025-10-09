@@ -16,6 +16,9 @@ return new class extends Migration {
                 $table->string('name')->nullable();
                 $table->magellanPolygon('boundary')->nullable();
                 $table->magellanPoint('location', 4326)->nullable();
+                $table->unsignedBigInteger('view_count')->default(0);
+                $table->timestamp('last_viewed_at')->nullable();
+
                 $table->timestamps();
             });
         }
