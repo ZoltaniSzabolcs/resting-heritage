@@ -71,11 +71,12 @@ const deletePerson = (personId) => {
                 <h1 class="text-2xl font-semibold">Persons</h1>
             </div>
 
+            <!-- Search input -->
             <div class="py-6 relative text-sm text-gray-800 col-span-3">
                 <div
                     class="absolute pl-2 left-0 top-0 bottom-0 flex items-center pointer-events-none text-gray-500"
                 >
-                    <MagnifyingGlass/>
+                    <MagnifyingGlass />
                 </div>
 
                 <input
@@ -86,51 +87,85 @@ const deletePerson = (personId) => {
                     id="search"
                     class="block rounded-lg border-0 py-2 pl-10
                     text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400
-                    focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 w-full"
                 />
             </div>
 
-            <table class="min-w-full border border-gray-200 shadow-sm rounded-lg overflow-hidden">
-                <thead class="bg-gray-100">
-                <tr>
-                    <th class="py-2 px-4 text-left">Name</th>
-                    <th class="py-2 px-12 text-left">Birth date</th>
-                    <th class="py-2 px-12 text-left">Death date</th>
-                    <th class="py-2 px-4 text-left">Birth place</th>
-                    <th class="py-2 px-4 text-left">Death place</th>
-                    <th class="py-2 px-4 text-left">Biography</th>
-                    <th class="py-2 px-4 text-left">Occupation</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="person in persons.data" :key="person.id" class="border-t hover:bg-gray-50">
-                    <td class="py-2 px-4">{{
-                            (person.initials ? person.initials : '')
-                            + ' ' + person.lastName + ' ' + person.firstName
-                        }}
-                    </td>
-                    <td class="py-2 px-4">{{ person.birthDate }}</td>
-                    <td class="py-2 px-4">{{ person.deathDate }}</td>
-                    <td class="py-2 px-4">{{ person.birthPlace }}</td>
-                    <td class="py-2 px-4">{{ person.deathPlace }}</td>
-                    <td class="py-2 px-4">{{ person.biography }}</td>
-                    <td class="py-2 px-4">{{ person.occupation }}</td>
-                    <td class="py-2 px-2">
-                        <Link :href="route('persons.edit', person.id)"
-                              class="px-2 text-indigo-600 hover:text-indigo-900">Edit
-                        </Link>
-                    </td>
-                    <td class="py-2 px-2">
-                        <Link @click="deletePerson(person.id)"
-                              class="px-2 text-indigo-600 hover:text-indigo-900">
-                            Delete
-                        </Link>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <!-- Persons Grid -->
+            <div
+                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+            >
+                <div
+                    v-for="person in persons.data"
+                    :key="person.id"
+                    class="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg transition-shadow duration-300"
+                >
+                    <!-- Image -->
+                    <div class="relative w-full h-48 bg-gray-100 rounded-t-xl overflow-hidden">
+                        <img
+                            v-if="person.imageUrl"
+                            :src="person.imageUrl"
+                            :alt="person.firstName + ' ' + person.lastName"
+                            class="object-cover w-full h-full"
+                        />
+                        <div
+                            v-else
+                            class="flex items-center justify-center h-full text-gray-400"
+                        >
+                            No Image
+                        </div>
+                    </div>
 
-            <!--         Pagination Controls-->
+                    <!-- Content -->
+                    <div class="p-4">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-1">
+                            {{ (person.initials ? person.initials + ' ' : '') + person.lastName + ' ' + person.firstName }}
+                        </h2>
+                        <p class="text-sm text-gray-500 mb-2">
+                            <span class="font-medium">Occupation:</span> {{ person.occupation }}
+                        </p>
+                        <p class="text-sm text-gray-500">
+                            <span class="font-medium">Born:</span>
+                            {{ person.birthDate }} in {{ person.birthPlace }}
+                        </p>
+                        <p class="text-sm text-gray-500 mb-2">
+                            <span class="font-medium">Died:</span>
+                            {{ person.deathDate }} in {{ person.deathPlace }}
+                        </p>
+
+                        <p
+                            v-if="person.biography"
+                            class="text-sm text-gray-700 line-clamp-3 mb-3"
+                        >
+                            {{ person.biography }}
+                        </p>
+
+                        <!-- Buttons -->
+                        <div class="flex justify-between items-center mt-4">
+                            <Link
+                                :href="route('persons.edit', person.id)"
+                                class="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
+                            >
+                                Edit
+                            </Link>
+                            <button
+                                @click="deletePerson(person.id)"
+                                class="text-red-500 hover:text-red-700 text-sm font-medium"
+                            >
+                                Delete
+                            </button>
+                            <Link
+                                :href="route('persons.show', person.id)"
+                                class="text-green-600 hover:text-green-900 text-sm font-medium"
+                            >
+                                More
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination Controls -->
             <div class="p-6 max-w-7xl mx-auto">
                 <PaginationBar
                     :meta="persons.meta"
