@@ -1,7 +1,6 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
 
-/** @type {import('tailwindcss').Config} */
 export default {
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
@@ -9,14 +8,67 @@ export default {
         './resources/views/**/*.blade.php',
         './resources/js/**/*.vue',
     ],
-
     theme: {
         extend: {
+            colors: {
+                "secondary": "#7e5f1f",
+                "primary-container": "#d8e6d6",
+                "on-secondary": "#ffffff",
+                "on-tertiary-fixed": "#462300",
+                "tertiary-fixed": "#fbb980",
+                "on-primary-fixed": "#364237",
+                "on-tertiary-container": "#613607",
+                "on-surface-variant": "#656555",
+                "surface-container-highest": "#eae9d5",
+                "on-error": "#ffffff",
+                "error-container": "#fe8b70",
+                "surface": "#feffd6",
+                "inverse-on-surface": "#9f9d95",
+                "primary-fixed": "#d8e6d6",
+                "surface-container-low": "#fcf9ee",
+                "surface-bright": "#feffd6",
+                "error-dim": "#5c1202",
+                "tertiary-dim": "#7d4d1e",
+                "on-primary-container": "#485549",
+                "secondary-fixed": "#ffdea5",
+                "surface-tint": "#556255",
+                "inverse-surface": "#0e0e0a",
+                "tertiary": "#8c5929",
+                "error": "#a54731",
+                "surface-container-lowest": "#ffffff",
+                "on-secondary-fixed": "#543b00",
+                "outline-variant": "#bbbaa7",
+                "inverse-primary": "#e7f5e4",
+                "primary-fixed-dim": "#cad8c9",
+                "on-tertiary-fixed-variant": "#6b3e10",
+                "secondary-fixed-dim": "#f8cf83",
+                "on-error-container": "#742410",
+                "primary": "#556255",
+                "tertiary-fixed-dim": "#ecab74",
+                "tertiary-container": "#fbb980",
+                "on-primary-fixed-variant": "#525f52",
+                "on-primary": "#eefceb",
+                "on-background": "#38392b",
+                "surface-variant": "#eae9d5",
+                "outline": "#828271",
+                "on-secondary-fixed-variant": "#745716",
+                "surface-container-high": "#f0efdd",
+                "secondary-dim": "#715313",
+                "background": "#feffd6",
+                "secondary-container": "#ffdea5",
+                "surface-container": "#f6f4e5",
+                "on-surface": "#38392b",
+                "on-tertiary": "#ffffff",
+                "on-secondary-container": "#694d0c",
+                "surface-dim": "#e5e4cd",
+                "primary-dim": "#49564a"
+            },
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                "headline": ["Noto Serif", ...defaultTheme.fontFamily.serif],
+                "body": ["Newsreader", ...defaultTheme.fontFamily.serif],
+                "label": ["Work Sans", ...defaultTheme.fontFamily.sans]
             },
         },
     },
-
     plugins: [forms],
 };
