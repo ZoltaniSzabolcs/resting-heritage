@@ -77,7 +77,7 @@ class GraveController extends Controller
         $grave->save();
 
         return Inertia::render('Graves/Show', [
-            'grave' => $grave->load('persons', 'cemetery')
+            'grave' => GraveResource::make($grave->load('persons', 'cemetery')),
         ]);
     }
 

@@ -27,6 +27,15 @@ class PersonResource extends JsonResource
             'biography' => $this->biography,
             'occupation' => $this->occupation,
             'imageUrl' => $this->image_url,
+            'graveName' => $this->whenLoaded('grave', function () {
+                return $this->grave->name;
+            }),
+            'cemeteryName' => $this->whenLoaded('grave', function () {
+                return $this->grave->cemetery ? $this->grave->cemetery->name : null;
+            }),
+            'cemeteryId' => $this->whenLoaded('grave', function () {
+                return $this->grave->cemetery_id;
+            }),
         ];
     }
 }

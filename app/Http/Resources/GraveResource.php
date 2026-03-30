@@ -20,6 +20,10 @@ class GraveResource extends JsonResource
             'name' => $this->name,
             'location' => $this->location,
             'boundary' => $this->boundary,
+            'cemeteryName' => $this->whenLoaded('cemetery', function () {
+                return $this->cemetery->name;
+            }),
+            'persons' => PersonResource::collection($this->whenLoaded('persons')),
         ];
     }
 }

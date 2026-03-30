@@ -71,6 +71,7 @@ class PersonController extends Controller
      */
     public function show(Person $person)
     {
+        $person->load('grave.cemetery');
         $grave = Grave::find($person->grave_id);
 
         if ($grave) {
@@ -80,7 +81,7 @@ class PersonController extends Controller
         }
 
         return Inertia::render('Persons/Show', [
-            'person' => PersonResource::make($person)
+            'person' => PersonResource::make($person),
         ]);
     }
 
