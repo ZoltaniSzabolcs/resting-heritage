@@ -60,7 +60,10 @@ class CemeteryController extends Controller
      */
     public function show(Cemetery $cemetery)
     {
-        return new PersonResource($cemetery);
+        return Inertia::render('Cemeteries/Show', [
+            'cemetery' => CemeteryResource::make($cemetery),
+            'persons' => PersonResource::collection($cemetery->graves()->with('persons')->get()->pluck('persons')->flatten()),
+        ]);
     }
 
     /**
