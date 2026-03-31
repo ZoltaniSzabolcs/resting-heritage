@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
@@ -43,9 +44,9 @@ class Person extends Model
         'image_url' => '',
     ];
 
-    public function grave() : HasOne
+    public function grave() : BelongsTo
     {
-        return $this->hasOne(Grave::class);
+        return $this->BelongsTo(Grave::class);
     }
 
     public static function boot()

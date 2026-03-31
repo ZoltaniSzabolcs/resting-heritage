@@ -20,6 +20,7 @@ class GraveResource extends JsonResource
             'name' => $this->name,
             'location' => $this->location,
             'boundary' => $this->boundary,
+            'imageUrl' => $this->image_url ?? null,
             'cemeteryName' => $this->whenLoaded('cemetery', function () {
                 return $this->cemetery->name;
             }),

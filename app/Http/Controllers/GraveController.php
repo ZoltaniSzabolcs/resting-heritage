@@ -18,22 +18,17 @@ class GraveController extends Controller
      */
     public function index(Request $request)
     {
-        $includePersons = $request->query('includePersons', false);
         $perPage = $request->query('per_page', 10);
 
-        $query = Grave::query();
+        $query = Grave::with(['cemetery', 'persons']);
+
         $this->applySearch($query, $request->search);
 
-        if ($includePersons) {
-            $query->with('persons');
-        }
+        $graves = $query->paginate($perPage)->withQueryString();
 
-        $graves = $query->paginate($perPage);
-
-        return Inertia::render('Graves/index', [
+        return Inertia::render('Graves/Index', [
             'graves' => GraveResource::collection($graves),
             'search' => $request->get('search', ''),
-            'page' => $request->get('page', 1),
         ]);
     }
 

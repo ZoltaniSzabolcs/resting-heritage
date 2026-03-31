@@ -24,7 +24,7 @@ class CemeteryController extends Controller
         $cemeteriesQuery = Cemetery::query();
         $this->applySearch($cemeteriesQuery, $request->search);
 
-        return Inertia::render('Cemeteries/index', [
+        return Inertia::render('Cemeteries/Index', [
             'cemeteries' => CemeteryResource::collection(
                 $cemeteriesQuery->paginate($perPage)),
             'search' => $request->search ?? '',

@@ -22,10 +22,10 @@ class PersonController extends Controller
         $perPage = $request->query('per_page');
         $perPage = $perPage ?? 10;
 
-        $personsQuery = Person::query();
+        $personsQuery = Person::with('grave.cemetery');
         $this->applySearch($personsQuery, $request->search);
 
-        return Inertia::render('Persons/index', [
+        return Inertia::render('Persons/Index', [
             'persons' => PersonResource::collection(
                 $personsQuery->paginate($perPage)),
             'search' => $request->search ?? '',
